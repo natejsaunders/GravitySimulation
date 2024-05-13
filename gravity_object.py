@@ -9,7 +9,7 @@ class GravityObject:
     # Bad practice
     SCREEN_SIZE = pygame.Vector2(1280, 720)
 
-    TRAIL_LIMIT = 1000
+    TRAIL_LIMIT = 2000
 
     id_counter = 1
 
