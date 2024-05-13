@@ -12,11 +12,18 @@ BACKGROUND_COLOR = pygame.Color(0, 0, 0) # black
 MAX_FRAMERATE = 60 # (fps)
 BASE_TIME_MODIFIER = 10
 
+OBJECT_LIMIT = 100
+
+TRAIL_LENGTH = 100
+
 time_modifier = BASE_TIME_MODIFIER
 
 paused = False
 
-# Need to eyeball this
+mouse_held = False
+mouse_held_pos = pygame.Vector2(0,0)
+
+# Gravitaional constant
 G = 6.67430 * (10^-11)
 
 screen = pygame.display.set_mode(SCREEN_SIZE)
@@ -28,8 +35,10 @@ delta = 0
 gravity_objects = []
 
 # Test objects
-gravity_objects.append(GravityObject(position=pygame.Vector2(200, SCREEN_SIZE.y/2), velocity=pygame.Vector2(0, 4.6875), radius = 3))
-gravity_objects.append(GravityObject(position=pygame.Vector2(400, SCREEN_SIZE.y/2), velocity=pygame.Vector2(0, 0), radius = 10, fixed=True))
+#gravity_objects.append(GravityObject(position=pygame.Vector2(SCREEN_SIZE.x/2, SCREEN_SIZE.y/2), radius = 50, fixed=True))
+#gravity_objects.append(GravityObject(position=pygame.Vector2(SCREEN_SIZE.x/3*2, SCREEN_SIZE.y/2), velocity=pygame.Vector2(0, -1), radius = 10))
+#gravity_objects.append(GravityObject(position=pygame.Vector2(SCREEN_SIZE.x/3, SCREEN_SIZE.y/2), velocity=pygame.Vector2(0, 1), radius = 10))
+#gravity_objects.append(GravityObject(position=pygame.Vector2(600, 500), velocity=pygame.Vector2(0, 0), radius = 5))
 
 while running:
     for event in pygame.event.get():
@@ -38,7 +47,19 @@ while running:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 paused = not paused
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            mouse_held = True
+            mouse_held_pos = pygame.Vector2(pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1])
+        if event.type == pygame.MOUSEBUTTONUP:
+            if(mouse_held):
+                mouse_pos_vec = pygame.Vector2(pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]) 
+                mouse_vel_vec = mouse_held_pos - mouse_pos_vec
 
+                gravity_objects.append(GravityObject(position=mouse_pos_vec, velocity=mouse_vel_vec / 10, radius = 5))
+                if len(gravity_objects) > OBJECT_LIMIT:
+                    gravity_objects.pop(0)
+
+            mouse_held = False
 
     if not paused:
         screen.fill(BACKGROUND_COLOR)
@@ -46,7 +67,6 @@ while running:
         for gravity_object in gravity_objects:
 
             g_force = pygame.Vector2(0, 0)
-            c_force = pygame.Vector2(0, 0)
 
             # Iterating throug other objects and applying gravity
             for other_gravity_object in gravity_objects:
@@ -58,27 +78,15 @@ while running:
                 distance = rel_pos.magnitude()
                 direction = rel_pos / distance
 
-                g_force_scalar = ((G * gravity_object.mass * other_gravity_object.mass) / math.pow(distance, 2.0))
-
-                c_force_scalar = (gravity_object.mass * gravity_object.velocity.magnitude()) / distance
-
-                # Adding centrifugal force from possible orbit
-                c_force.x += c_force_scalar * direction.x
-                c_force.y += c_force_scalar * direction.y
-
-                g_force.x += g_force_scalar * -direction.x
-                g_force.y += g_force_scalar * -direction.y
-
-                if not gravity_object.fixed: print(g_force_scalar)
-
-                pygame.draw.aaline(screen, pygame.Color(255,255,255), gravity_object.position, gravity_object.position + direction * (-g_force_scalar*100))
+                g_force = ((G * gravity_object.mass * other_gravity_object.mass) / math.pow(distance, 2.0)) * direction
                 
-            # Updating position and velocity values for now
-            gravity_object.update(g_force, delta)#)c_force
+            # Updating position, acceleration and velocity values
+            gravity_object.update(g_force, delta)
 
-            #pygame.draw.circle(screen, gravity_object.color, gravity_object.position, gravity_object.radius)
             gravity_object.draw(screen)
             
+        if(mouse_held): pygame.draw.aaline(screen, pygame.color.Color(255,255,255), mouse_held_pos, pygame.mouse.get_pos())
+
         pygame.display.flip()
 
     delta = clock.tick(MAX_FRAMERATE) / 1000.0 * time_modifier
