@@ -4,6 +4,9 @@ import pygame
 
 from gravity_object import GravityObject
 
+# TODO
+# Implement Verlet Intergration
+
 SCREEN_SIZE = pygame.Vector2(1280, 720)
 BACKGROUND_COLOR = pygame.Color(0, 0, 0) # black
 MAX_FRAMERATE = 60 # (fps)
