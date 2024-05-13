@@ -35,7 +35,7 @@ delta = 0
 gravity_objects = []
 
 # Test objects
-#gravity_objects.append(GravityObject(position=pygame.Vector2(SCREEN_SIZE.x/2, SCREEN_SIZE.y/2), radius = 50, fixed=True))
+gravity_objects.append(GravityObject(position=pygame.Vector2(SCREEN_SIZE.x/2, SCREEN_SIZE.y/2), radius = 50, fixed=True))
 #gravity_objects.append(GravityObject(position=pygame.Vector2(SCREEN_SIZE.x/3*2, SCREEN_SIZE.y/2), velocity=pygame.Vector2(0, -1), radius = 10))
 #gravity_objects.append(GravityObject(position=pygame.Vector2(SCREEN_SIZE.x/3, SCREEN_SIZE.y/2), velocity=pygame.Vector2(0, 1), radius = 10))
 #gravity_objects.append(GravityObject(position=pygame.Vector2(600, 500), velocity=pygame.Vector2(0, 0), radius = 5))
@@ -56,8 +56,8 @@ while running:
                 mouse_vel_vec = mouse_held_pos - mouse_pos_vec
 
                 gravity_objects.append(GravityObject(position=mouse_pos_vec, velocity=mouse_vel_vec / 10, radius = 5))
-                if len(gravity_objects) > OBJECT_LIMIT:
-                    gravity_objects.pop(0)
+                #if len(gravity_objects) > OBJECT_LIMIT:
+                #    gravity_objects.pop(0)
 
             mouse_held = False
 
@@ -65,7 +65,8 @@ while running:
         screen.fill(BACKGROUND_COLOR)
         # Calculating new object values and drawing
         for gravity_object in gravity_objects:
-
+            
+            gravity_object.draw(screen)
             g_force = pygame.Vector2(0, 0)
 
             # Iterating throug other objects and applying gravity
@@ -78,13 +79,11 @@ while running:
                 distance = rel_pos.magnitude()
                 direction = rel_pos / distance
 
-                g_force = ((G * gravity_object.mass * other_gravity_object.mass) / math.pow(distance, 2.0)) * direction
+                g_force += ((G * gravity_object.mass * other_gravity_object.mass) / math.pow(distance, 2.0)) * direction
                 
             # Updating position, acceleration and velocity values
-            gravity_object.update(g_force, delta)
+            if not gravity_object.update(g_force, delta): gravity_objects.remove(gravity_object)
 
-            gravity_object.draw(screen)
-            
         if(mouse_held): pygame.draw.aaline(screen, pygame.color.Color(255,255,255), mouse_held_pos, pygame.mouse.get_pos())
 
         pygame.display.flip()
