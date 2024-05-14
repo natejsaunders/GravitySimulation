@@ -4,13 +4,10 @@ import pygame
 
 from gravity_object import GravityObject
 
-# TODO
-# Implement Verlet Intergration
-
 SCREEN_SIZE = pygame.Vector2(1280, 720)
 BACKGROUND_COLOR = pygame.Color(0, 0, 0) # black
 MAX_FRAMERATE = 60 # (fps)
-BASE_TIME_MODIFIER = 10
+BASE_TIME_MODIFIER = 1
 
 OBJECT_LIMIT = 100
 
@@ -27,6 +24,7 @@ mouse_held_pos = pygame.Vector2(0,0)
 G = 6.67430 * (10^-11)
 
 screen = pygame.display.set_mode(SCREEN_SIZE)
+pygame.display.set_caption("Gravity")
 clock = pygame.time.Clock()
 running = True
 delta = 0

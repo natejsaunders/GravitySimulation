@@ -49,8 +49,10 @@ class GravityObject:
         self.points.insert(0, self.position)
 
         # Deleted from list if returns false
-        #if self.position.x > GravityObject.SCREEN_SIZE.x * 10: return False
-        #if self.position.y > GravityObject.SCREEN_SIZE.y * 10: return False
+        if self.position.x > GravityObject.SCREEN_SIZE.x * 10: return False
+        if self.position.x < GravityObject.SCREEN_SIZE.x * -10: return False
+        if self.position.y > GravityObject.SCREEN_SIZE.y * 10: return False
+        if self.position.y < GravityObject.SCREEN_SIZE.y * -10: return False
 
         return True
 
