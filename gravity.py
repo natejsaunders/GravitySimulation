@@ -33,7 +33,7 @@ delta = 0
 gravity_objects = []
 
 # Test objects
-gravity_objects.append(GravityObject(position=pygame.Vector2(400, SCREEN_SIZE.y/2), radius = 50, fixed=True))
+gravity_objects.append(GravityObject(position=pygame.Vector2(400, SCREEN_SIZE.y/2), radius = 50, fixed=False))
 gravity_objects.append(GravityObject(position=pygame.Vector2(600, SCREEN_SIZE.y/2), velocity=pygame.Vector2(0, 15), radius = 5))
 #gravity_objects.append(GravityObject(position=pygame.Vector2(SCREEN_SIZE.x/3, SCREEN_SIZE.y/2), velocity=pygame.Vector2(0, 1), radius = 10))
 #gravity_objects.append(GravityObject(position=pygame.Vector2(600, 500), velocity=pygame.Vector2(0, 0), radius = 5))
