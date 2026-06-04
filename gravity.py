@@ -8,7 +8,7 @@ SCREEN_SIZE = pygame.Vector2(1280, 720)
 BACKGROUND_COLOR = pygame.Color(0, 0, 0)
 MAX_FRAMERATE = 60
 
-G = 200
+G = 50
 
 
 def main():
