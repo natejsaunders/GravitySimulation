@@ -1,6 +1,40 @@
 # Gravity Simulation
-*Requires Pygame*
 
-1. Run program, preset objects can be set up at the beginning of `gravity.py` using the `GravityObject` class
-2. While the prorgam is running, press and hold the mouse to create a `GravityObject` of preset size
-3. The direction and speed of the object is defined by where the mouse is released, the longer the distance, the higher the speed!
+A 2D gravitational physics sandbox built with Pygame.
+
+## Requirements
+
+- Python 3.10+
+- Pygame 2.0+
+
+## Installation
+
+```bash
+pip install -r requirements.txt
+```
+
+## Usage
+
+```bash
+python gravity.py
+```
+
+## Controls
+
+| Input | Action |
+|-------|--------|
+| Click and drag | Aim a new object (direction and speed based on drag vector) |
+| Release mouse | Launch the object |
+| Space | Pause / resume simulation |
+
+Objects that travel more than 10 screen widths from the origin are removed.
+
+## Configuration
+
+Edit the constants at the top of `gravity.py`:
+
+- `SCREEN_SIZE` — Window dimensions
+- `MAX_FRAMERATE` — Frame rate cap
+- `G` — Gravitational constant
+
+Preset objects can be added to the `gravity_objects` list in `main()`.
