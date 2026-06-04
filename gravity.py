@@ -64,6 +64,25 @@ def main():
                 if not obj.update(g_force, delta):
                     gravity_objects.remove(obj)
 
+            absorbed_ids = set()
+            for obj in gravity_objects:
+                if obj.id in absorbed_ids:
+                    continue
+                for other in gravity_objects:
+                    if other.id in absorbed_ids or obj.id == other.id:
+                        continue
+                    distance = (obj.position - other.position).magnitude()
+                    if obj.radius >= other.radius:
+                        if distance + other.radius <= obj.radius:
+                            obj.absorb(other)
+                            absorbed_ids.add(other.id)
+                    else:
+                        if distance + obj.radius <= other.radius:
+                            other.absorb(obj)
+                            absorbed_ids.add(obj.id)
+                            break
+            gravity_objects = [o for o in gravity_objects if o.id not in absorbed_ids]
+
             if mouse_held:
                 pygame.draw.aaline(screen, "white", mouse_held_pos, pygame.mouse.get_pos())
 

@@ -54,6 +54,12 @@ class GravityObject:
 
         return True
 
+    def absorb(self, other):
+        total_mass = self.mass + other.mass
+        self.velocity = (self.velocity * self.mass + other.velocity * other.mass) / total_mass
+        self.mass = total_mass
+        self.radius = math.sqrt(self.mass / (math.pi * self.density))
+
     def draw(self, screen):
         prev_point = self.position
         for point in self.points:
